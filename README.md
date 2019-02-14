@@ -1,4 +1,4 @@
 # parrot-wings-client
-Installation:
-```npm install```
+Installation:<br>
+```npm install```<br>
 ```npm start```
