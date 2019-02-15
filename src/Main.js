@@ -8,6 +8,7 @@ class Main extends Component {
         super();
 
         this.state = {
+            email: 'Not Chosen',
             loggedIn : true,
             user: {},
             userList: [],
@@ -20,6 +21,7 @@ class Main extends Component {
         this.getTransactions = this.getTransactions.bind(this);
         this.pay = this.pay.bind(this);
         this.logOut = this.logOut.bind(this);
+        this.sortTable = this.sortTable.bind(this);
 
         this.updateInfo();
     }
@@ -112,6 +114,56 @@ class Main extends Component {
                 console.log('Error: ' + error);
         });
     }
+    sortTable(n, isInt) {
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = document.getElementById("table");
+        switching = true;
+        dir = "asc"; 
+        while (switching) {
+          switching = false;
+          rows = table.rows;
+          for (i = 1; i < (rows.length - 1); i++) {
+            shouldSwitch = false;
+            x = rows[i].getElementsByTagName("TD")[n];
+            y = rows[i + 1].getElementsByTagName("TD")[n];
+            if (dir == "asc") {
+                if(isInt) {
+                    if (+x.innerHTML > +y.innerHTML) {
+                        shouldSwitch = true;
+                        break;
+                      }
+                } else {
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            } else if (dir == "desc") {
+                if(isInt) {
+                    if (+x.innerHTML < +y.innerHTML) {
+                        shouldSwitch = true;
+                        break;
+                      }
+                } else {
+                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+          }
+          if (shouldSwitch) {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+            switchcount ++; 
+          } else {
+            if (switchcount == 0 && dir == "asc") {
+              dir = "desc";
+              switching = true;
+            }
+          }
+        }
+    }
     pay() {
         fetch('/api/pay', {
             method: 'POST',
@@ -148,7 +200,7 @@ class Main extends Component {
                     <div className="panel panel-default">
                         <div className="panel-heading">Payment</div>
                         <div className="panel-body">
-                            <div>Payee: <ReactAutocomplete
+                            <div><label>Payee: </label><ReactAutocomplete
                                 items={this.state.userList}
                                 shouldItemRender={(item, value) => item.name.toLowerCase().indexOf(value.toLowerCase()) > -1}
                                 getItemValue={item => item.name}
@@ -162,20 +214,21 @@ class Main extends Component {
                                 }
                                 value={this.state.value}
                                 onChange={e => this.setState({ value: e.target.value })}
-                                onSelect={(value, item) => this.setState({ value, payee: item.id })}
+                                onSelect={(value, item) => this.setState({ value, payee: item.id, email: item.email })}
                             /></div>
-                            <div>Amount: <input id='amount' type='number'/></div>
+                            <div>Email: {this.state.email}</div>
+                            <div><label>Amount: </label><input id='amount' type='number'/></div>
                         </div>
                         <button onClick={this.pay} className='btn btn-primary'>Pay</button>
                     </div>
-                    <table className='table'>
+                    <table id="table" className='table'>
                         <thead>
                         <tr>
-                            <td>Payer</td>
-                            <td>Payee</td>
-                            <td>Date</td>
-                            <td>Amount</td>
-                            <td>Balance</td>
+                            <td onClick={() => this.sortTable(0, false)}>Payer</td>
+                            <td onClick={() => this.sortTable(1, false)}>Payee</td>
+                            <td onClick={() => this.sortTable(2, false)}>Date</td>
+                            <td onClick={() => this.sortTable(3, true)}>Amount</td>
+                            <td onClick={() => this.sortTable(4, true)}>Balance</td>
                         </tr>
                         </thead>
                         <tbody>

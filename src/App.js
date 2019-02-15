@@ -51,7 +51,6 @@ class App extends Component {
 class LoginComponent extends Component {
   constructor (props){
     super(props);
-    this.test = this.test.bind(this);
     this.login = this.login.bind(this);
   }
   login() {
@@ -81,9 +80,9 @@ class LoginComponent extends Component {
   render() {
     return (
       <div>
-        <div className="prompt">Login.</div>
-        <div>Email: <input id="loginEmail" type="text"/></div>
-        <div>Password: <input id="loginPassword" type="password"/></div>
+        <h5>Login.</h5>
+        <div className="form-group">Email: <input className="form-control" id="loginEmail" type="text"/></div>
+        <div className="form-group">Password: <input className="form-control" id="loginPassword" type="password"/></div>
         <button onClick={this.login} className="btn btn-primary">Login</button>
       </div>
     );
@@ -124,11 +123,11 @@ class RegisterComponent extends Component {
   render() {
     return (
       <div>
-        <div>Register.</div>
-        <div>Name: <input id="name" type="text"/></div>
-        <div>Email: <input id="email" type="text"/></div>
-        <div>Password: <input id="password" type="password"/></div>
-        <div>Confirm password: <input id="confirmPassword" type="password"/></div>
+        <h5>Register.</h5>
+        <div className="row"><label className="col-md-1 control-label">Name: </label><input className="col-md-4 form-control controls" id="name" type="text"/></div>
+        <div className="row"><label className="col-md-1 control-label">Email: </label><input className="col-md-4 form-control controls" id="email" type="text"/></div>
+        <div className="row"><label className="col-md-1">Password: </label><input className="col-md-4 form-control controls" id="password" type="password"/></div>
+        <div className="row"><label className="col-md-1">Confirm password: </label><input className="col-md-4 form-control controls" id="confirmPassword" type="password"/></div>
         <button onClick={this.register} className="btn btn-secondary">Register</button>
       </div>
     );
